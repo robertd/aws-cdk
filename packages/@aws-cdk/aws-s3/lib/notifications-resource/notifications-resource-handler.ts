@@ -48,7 +48,7 @@ export class NotificationsResourceHandler extends cdk.Construct {
     super(scope, id);
 
     const role = new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      assumedBy: new iam.ServicePrincipal(this, 'lambda'),
       managedPolicyArns: [
         this.node.stack.formatArn({
           service: 'iam',

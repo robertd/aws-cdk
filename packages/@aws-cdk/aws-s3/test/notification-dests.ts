@@ -34,7 +34,7 @@ export class Topic extends cdk.Construct implements s3notifications.IBucketNotif
     if (!this.notifyingBucketPaths.has(bucketId)) {
       this.policy.addStatement(new iam.PolicyStatement()
         .describe(`sid${this.policy.statementCount}`)
-        .addServicePrincipal('s3.amazonaws.com')
+        .addServicePrincipal(this, 's3')
         .addAction('sns:Publish')
         .addResource(this.topicArn)
         .addCondition('ArnLike', { "aws:SourceArn": bucketArn }));
