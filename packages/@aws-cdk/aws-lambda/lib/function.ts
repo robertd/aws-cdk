@@ -347,7 +347,7 @@ export class Function extends FunctionBase {
     }
 
     this.role = props.role || new iam.Role(this, 'ServiceRole', {
-      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      assumedBy: new iam.ServicePrincipal(this, 'lambda'),
       managedPolicyArns,
     });
 

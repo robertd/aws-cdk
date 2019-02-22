@@ -232,7 +232,7 @@ export abstract class FunctionBase extends cdk.Construct implements IFunction  {
     if (!this.node.tryFindChild(permissionId)) {
       this.addPermission(permissionId, {
         action: 'lambda:InvokeFunction',
-        principal: new iam.ServicePrincipal('events.amazonaws.com'),
+        principal: new iam.ServicePrincipal(this, 'events'),
         sourceArn: ruleArn
       });
     }
@@ -263,7 +263,7 @@ export abstract class FunctionBase extends cdk.Construct implements IFunction  {
       //
       // (Wildcards in principals are unfortunately not supported.
       this.addPermission('InvokedByCloudWatchLogs', {
-        principal: new iam.ServicePrincipal(`logs.${this.node.stack.region}.amazonaws.com`),
+        principal: new iam.ServicePrincipal(this, 'logs'),
         sourceArn: arn
       });
       this.logSubscriptionDestinationPolicyAddedFor.push(arn);
@@ -285,7 +285,7 @@ export abstract class FunctionBase extends cdk.Construct implements IFunction  {
     if (!this.node.tryFindChild(permissionId)) {
       this.addPermission(permissionId, {
         sourceAccount: this.node.stack.accountId,
-        principal: new iam.ServicePrincipal('s3.amazonaws.com'),
+        principal: new iam.ServicePrincipal(this, 's3'),
         sourceArn: bucketArn,
       });
     }
@@ -341,8 +341,8 @@ export abstract class FunctionBase extends cdk.Construct implements IFunction  {
       return (principal as iam.AccountPrincipal).accountId;
     }
 
-    if (`service` in principal) {
-      return (principal as iam.ServicePrincipal).service;
+    if (`principalName` in principal) {
+      return (principal as iam.ServicePrincipal).principalName;
     }
 
     throw new Error(`Invalid principal type for Lambda permission statement: ${JSON.stringify(this.node.resolve(principal))}. ` +

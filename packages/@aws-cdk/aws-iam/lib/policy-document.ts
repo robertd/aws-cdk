@@ -92,20 +92,22 @@ export class AccountPrincipal extends ArnPrincipal {
  */
 export class ServicePrincipal extends PolicyPrincipal {
   /**
+   * The resolved name of this service principal (e.g: s3.amazonaws.com).
+   */
+  public readonly principalName: string;
+
+  /**
    * @param scope   a Construct scoping the service principal, typically the resource that will cause the service
    *                principal to perform actions this policy statement authorizes, or it's parent Construct.
    * @param service the short name of the service (e.g: s3, sns, sqs, secretsmanager, ...)
    */
-  constructor(private readonly scope: cdk.IConstruct, private readonly service: string) {
+  constructor(scope: cdk.IConstruct, service: string) {
     super();
+    this.principalName = Region.named(scope.node.stack.region).servicePrincipal(service);
   }
 
   public policyFragment(): PrincipalPolicyFragment {
-    return new PrincipalPolicyFragment({
-      Service: [
-        Region.named(this.scope.node.stack.region).servicePrincipal(this.service)
-      ]
-    });
+    return new PrincipalPolicyFragment({ Service: [this.principalName] });
   }
 }
 

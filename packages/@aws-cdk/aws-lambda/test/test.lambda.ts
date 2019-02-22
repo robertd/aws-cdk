@@ -117,7 +117,7 @@ export = {
 
       fn.addPermission('S3Permission', {
         action: 'lambda:*',
-        principal: new iam.ServicePrincipal('s3.amazonaws.com'),
+        principal: new iam.ServicePrincipal(stack, 's3'),
         sourceAccount: stack.accountId,
         sourceArn: 'arn:aws:s3:::my_bucket'
       });
@@ -190,7 +190,7 @@ export = {
       test.throws(() => fn.addPermission('F1', { principal: new iam.ArnPrincipal('just:arn') }),
         /Invalid principal type for Lambda permission statement/);
 
-      fn.addPermission('S1', { principal: new iam.ServicePrincipal('my-service') });
+      fn.addPermission('S1', { principal: new iam.ServicePrincipal(stack, 'my-service') });
       fn.addPermission('S2', { principal: new iam.AccountPrincipal('account') });
 
       test.done();
@@ -200,7 +200,7 @@ export = {
       // GIVEN
       const stack = new cdk.Stack();
       const role = new iam.Role(stack, 'SomeRole', {
-        assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+        assumedBy: new iam.ServicePrincipal(stack, 'lambda'),
       });
       role.addToPolicy(new iam.PolicyStatement().addAction('confirm:itsthesame'));
 
@@ -246,7 +246,7 @@ export = {
 
       // Can call addPermission() but it won't do anything
       imported.addPermission('Hello', {
-        principal: new iam.ServicePrincipal('harry')
+        principal: new iam.ServicePrincipal(stack2, 'harry')
       });
 
       test.done();
