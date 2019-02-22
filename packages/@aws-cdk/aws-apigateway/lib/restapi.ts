@@ -327,7 +327,7 @@ export class RestApi extends cdk.Construct implements IRestApi {
 
   private configureCloudWatchRole(apiResource: CfnRestApi) {
     const role = new iam.Role(this, 'CloudWatchRole', {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+      assumedBy: new iam.ServicePrincipal(apiResource, 'apigateway'),
       managedPolicyArns: [ this.node.stack.formatArn({
         service: 'iam',
         region: '',

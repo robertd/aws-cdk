@@ -53,7 +53,7 @@ export class LambdaIntegration extends AwsIntegration {
 
   public bind(method: Method) {
     super.bind(method);
-    const principal = new iam.ServicePrincipal('apigateway.amazonaws.com');
+    const principal = new iam.ServicePrincipal(method, 'apigateway');
 
     const desc = `${method.httpMethod}.${method.resource.resourcePath.replace(/\//g, '.')}`;
 
