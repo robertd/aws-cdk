@@ -159,7 +159,7 @@ export abstract class TopicBase extends cdk.Construct implements ITopic {
     queue.addToResourcePolicy(new iam.PolicyStatement()
       .addResource(queue.queueArn)
       .addAction('sqs:SendMessage')
-      .addServicePrincipal('sns.amazonaws.com')
+      .addServicePrincipal(this, 'sns')
       .setCondition('ArnEquals', { 'aws:SourceArn': this.topicArn }));
 
     return sub;
@@ -195,7 +195,7 @@ export abstract class TopicBase extends cdk.Construct implements ITopic {
 
     lambdaFunction.addPermission(this.node.id, {
       sourceArn: this.topicArn,
-      principal: new iam.ServicePrincipal('sns.amazonaws.com'),
+      principal: new iam.ServicePrincipal(this, 'sns'),
     });
 
     return sub;
@@ -283,7 +283,7 @@ export abstract class TopicBase extends cdk.Construct implements ITopic {
     if (!this.eventRuleTargetPolicyAdded) {
       this.addToResourcePolicy(new iam.PolicyStatement()
         .addAction('sns:Publish')
-        .addPrincipal(new iam.ServicePrincipal('events.amazonaws.com'))
+        .addPrincipal(new iam.ServicePrincipal(this, 'events'))
         .addResource(this.topicArn));
 
       this.eventRuleTargetPolicyAdded = true;
@@ -319,7 +319,7 @@ export abstract class TopicBase extends cdk.Construct implements ITopic {
     if (!this.notifyingBuckets.has(bucketId)) {
 
       this.addToResourcePolicy(new iam.PolicyStatement()
-        .addServicePrincipal('s3.amazonaws.com')
+        .addServicePrincipal(this, 's3')
         .addAction('sns:Publish')
         .addResource(this.topicArn)
         .addCondition('ArnLike', { "aws:SourceArn": bucketArn }));
