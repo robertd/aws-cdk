@@ -8,7 +8,7 @@ export = {
     const stack = new Stack();
 
     new Role(stack, 'MyRole', {
-      assumedBy: new ServicePrincipal('sns.amazonaws.com')
+      assumedBy: new ServicePrincipal(stack, 'sns')
     });
 
     expect(stack).toMatch({ Resources:
@@ -27,7 +27,7 @@ export = {
   'a role can grant PassRole permissions'(test: Test) {
     // GIVEN
     const stack = new Stack();
-    const role = new Role(stack, 'Role', { assumedBy: new ServicePrincipal('henk.amazonaws.com') });
+    const role = new Role(stack, 'Role', { assumedBy: new ServicePrincipal(stack, 'henk') });
     const user = new User(stack, 'User');
 
     // WHEN
@@ -56,7 +56,7 @@ export = {
 
     // WHEN
     new Role(stack, 'MyRole', {
-      assumedBy: new ServicePrincipal('sns.amazonaws.com'),
+      assumedBy: new ServicePrincipal(stack, 'sns'),
       externalId: 'SomeSecret',
     });
 
@@ -84,7 +84,7 @@ export = {
     const stack = new Stack();
 
     const role = new Role(stack, 'MyRole', {
-      assumedBy: new ServicePrincipal('sns.amazonaws.com')
+      assumedBy: new ServicePrincipal(stack, 'sns')
     });
 
     test.ok(!('MyRoleDefaultPolicyA36BE1DD' in stack.toCloudFormation().Resources), 'initially created without a policy');
@@ -118,7 +118,7 @@ export = {
     const stack = new Stack();
 
     const role = new Role(stack, 'MyRole', {
-      assumedBy: new ServicePrincipal('service'),
+      assumedBy: new ServicePrincipal(stack, 'service'),
       managedPolicyArns: [ 'managed1', 'managed2' ]
     });
 
@@ -131,7 +131,7 @@ export = {
            { Statement:
             [ { Action: 'sts:AssumeRole',
               Effect: 'Allow',
-              Principal: { Service: 'service' } } ],
+              Principal: { Service: 'service.amazonaws.com' } } ],
              Version: '2012-10-17' },
           ManagedPolicyArns: [ 'managed1', 'managed2', 'managed3' ] } } } });
     test.done();
@@ -169,7 +169,7 @@ export = {
 
     'is not specified by default'(test: Test) {
       const stack = new Stack();
-      new Role(stack, 'MyRole', { assumedBy: new ServicePrincipal('sns.amazonaws.com') });
+      new Role(stack, 'MyRole', { assumedBy: new ServicePrincipal(stack, 'sns') });
       expect(stack).toMatch({
         Resources: {
           MyRoleF48FFE04: {
@@ -197,7 +197,7 @@ export = {
     'can be used to specify the maximum session duration for assuming the role'(test: Test) {
       const stack = new Stack();
 
-      new Role(stack, 'MyRole', { maxSessionDurationSec: 3700, assumedBy: new ServicePrincipal('sns.amazonaws.com') });
+      new Role(stack, 'MyRole', { maxSessionDurationSec: 3700, assumedBy: new ServicePrincipal(stack, 'sns') });
 
       expect(stack).to(haveResource('AWS::IAM::Role', {
         MaxSessionDuration: 3700
@@ -209,7 +209,7 @@ export = {
     'must be between 3600 and 43200'(test: Test) {
       const stack = new Stack();
 
-      const assumedBy = new ServicePrincipal('bla');
+      const assumedBy = new ServicePrincipal(stack, 'bla');
 
       new Role(stack, 'MyRole1', { assumedBy, maxSessionDurationSec: 3600 });
       new Role(stack, 'MyRole2', { assumedBy, maxSessionDurationSec: 43200 });
@@ -228,7 +228,7 @@ export = {
 
     new Role(stack, 'MyRole', {
       assumedBy: new CompositePrincipal(
-        new ServicePrincipal('boom.amazonaws.com'),
+        new ServicePrincipal(stack, 'boom'),
         new ArnPrincipal('1111111')
       )
     });
@@ -256,7 +256,7 @@ export = {
     // GIVEN
     const stack = new Stack();
     const myRole = new Role(stack, 'MyRole', {
-      assumedBy: new ServicePrincipal('boom.boom.boom')
+      assumedBy: new ServicePrincipal(stack, 'boom.boom.boom')
     });
 
     // WHEN

@@ -1,4 +1,5 @@
 import cdk = require('@aws-cdk/cdk');
+import { Region } from '@aws-cdk/region-settings';
 
 export class PolicyDocument extends cdk.Token {
   private statements = new Array<PolicyStatement>();
@@ -90,12 +91,21 @@ export class AccountPrincipal extends ArnPrincipal {
  * An IAM principal that represents an AWS service (i.e. sqs.amazonaws.com).
  */
 export class ServicePrincipal extends PolicyPrincipal {
-  constructor(public readonly service: string) {
+  /**
+   * @param scope   a Construct scoping the service principal, typically the resource that will cause the service
+   *                principal to perform actions this policy statement authorizes, or it's parent Construct.
+   * @param service the short name of the service (e.g: s3, sns, sqs, secretsmanager, ...)
+   */
+  constructor(private readonly scope: cdk.IConstruct, private readonly service: string) {
     super();
   }
 
   public policyFragment(): PrincipalPolicyFragment {
-    return new PrincipalPolicyFragment({ Service: [ this.service ] });
+    return new PrincipalPolicyFragment({
+      Service: [
+        Region.named(this.scope.node.stack.region).servicePrincipal(this.service)
+      ]
+    });
   }
 }
 
@@ -258,8 +268,15 @@ export class PolicyStatement extends cdk.Token {
     return this.addAwsPrincipal(arn);
   }
 
-  public addServicePrincipal(service: string): this {
-    return this.addPrincipal(new ServicePrincipal(service));
+  /**
+   * Adds a new ServicePrincipal to this PolicyStatement.
+   *
+   * @param scope   a Construct scoping the service principal, typically the resource that will cause the service
+   *                principal to perform actions this policy statement authorizes, or it's parent Construct.
+   * @param service the name of the service (e.g: s3, sqs, secretsmanager, ...)
+   */
+  public addServicePrincipal(scope: cdk.IConstruct, service: string): this {
+    return this.addPrincipal(new ServicePrincipal(scope, service));
   }
 
   public addFederatedPrincipal(federated: any, conditions: {[key: string]: any}): this {

@@ -301,7 +301,7 @@ export = {
     const stack = new Stack();
     const s = new PolicyStatement()
       .addAwsPrincipal('349494949494')
-      .addServicePrincipal('ec2.amazonaws.com')
+      .addServicePrincipal(stack, 'ec2')
       .addResource('resource')
       .addAction('action');
 
@@ -338,12 +338,12 @@ export = {
       // add via ctor
       const p = new CompositePrincipal(
         new ArnPrincipal('i:am:an:arn'),
-        new ServicePrincipal('amazon.com'));
+        new ServicePrincipal(stack, 'amazon.com'));
 
       // add via `addPrincipals` (with condition)
       p.addPrincipals(
         new Anyone(),
-        new ServicePrincipal('another.service')
+        new ServicePrincipal(stack, 'another.service')
       );
 
       const statement = new PolicyStatement().addPrincipal(p);
@@ -359,7 +359,7 @@ export = {
         Effect: 'Allow',
         Principal: {
           AWS: [ 'i:am:an:arn', '*', 'aws-principal-3' ],
-          Service: [ 'amazon.com', 'another.service' ],
+          Service: [ 'amazon.com.amazonaws.com', 'another.service.amazonaws.com' ],
         }
       });
       test.done();

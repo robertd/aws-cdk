@@ -10,7 +10,7 @@ export = nodeunit.testCase({
 
     // WHEN
     new iam.LazyRole(stack, 'Lazy', {
-      assumedBy: new iam.ServicePrincipal('test.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(stack, 'test')
     });
 
     // THEN
@@ -24,7 +24,7 @@ export = nodeunit.testCase({
 
     // WHEN
     const roleArn = new iam.LazyRole(stack, 'Lazy', {
-      assumedBy: new iam.ServicePrincipal('test.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(stack, 'test')
     }).roleArn;
 
     // THEN
@@ -48,7 +48,7 @@ export = nodeunit.testCase({
 
     // WHEN
     const role = new iam.LazyRole(stack, 'Lazy', {
-      assumedBy: new iam.ServicePrincipal('test.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(stack, 'test')
     });
 
     // THEN
