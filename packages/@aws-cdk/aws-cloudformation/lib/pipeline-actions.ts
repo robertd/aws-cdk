@@ -241,7 +241,7 @@ export abstract class PipelineCloudFormationDeployAction extends PipelineCloudFo
       this._deploymentRole = this.props.deploymentRole;
     } else {
       this._deploymentRole = new iam.Role(scope, 'Role', {
-        assumedBy: new iam.ServicePrincipal('cloudformation.amazonaws.com')
+        assumedBy: new iam.ServicePrincipal(stage.pipeline, 'cloudformation')
       });
 
       if (this.props.adminPermissions) {

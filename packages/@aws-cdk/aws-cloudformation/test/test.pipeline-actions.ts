@@ -359,7 +359,7 @@ class StageDouble implements cpapi.IStage {
 class RoleDouble extends iam.Role {
   public readonly statements = new Array<iam.PolicyStatement>();
 
-  constructor(scope: cdk.Construct, id: string, props: iam.RoleProps = { assumedBy: new iam.ServicePrincipal('test') }) {
+  constructor(scope: cdk.Construct, id: string, props: iam.RoleProps = { assumedBy: new iam.ServicePrincipal(scope, 'test') }) {
     super(scope, id, props);
   }
 
