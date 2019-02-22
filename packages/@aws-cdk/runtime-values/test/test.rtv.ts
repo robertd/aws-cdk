@@ -26,7 +26,7 @@ class RuntimeValueTest extends cdk.Construct {
     const queue = new sqs.CfnQueue(this, 'Queue', {});
 
     const role = new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      assumedBy: new iam.ServicePrincipal(this, 'lambda'),
     });
 
     new lambda.CfnFunction(this, 'Function', {
