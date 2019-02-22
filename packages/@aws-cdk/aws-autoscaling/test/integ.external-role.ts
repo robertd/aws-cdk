@@ -9,7 +9,7 @@ class TestStack extends cdk.Stack {
 
     const vpc = new ec2.VpcNetwork(this, 'VPC');
     const role = new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(this, 'ec2')
     });
 
     new asg.AutoScalingGroup(this, 'ASG', {

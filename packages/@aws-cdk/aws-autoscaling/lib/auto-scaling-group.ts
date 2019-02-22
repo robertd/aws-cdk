@@ -233,7 +233,7 @@ export class AutoScalingGroup extends cdk.Construct implements IAutoScalingGroup
     this.node.apply(new cdk.Tag(NAME_TAG, this.node.path));
 
     this.role = props.role || new iam.Role(this, 'InstanceRole', {
-      assumedBy: new iam.ServicePrincipal('ec2.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(this, 'ec2')
     });
 
     const iamProfile = new iam.CfnInstanceProfile(this, 'InstanceProfile', {

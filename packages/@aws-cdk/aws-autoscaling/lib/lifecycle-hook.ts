@@ -79,7 +79,7 @@ export class LifecycleHook extends cdk.Construct implements api.ILifecycleHook {
     super(scope, id);
 
     this.role = props.role || new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('autoscaling.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(this, 'autoscaling')
     });
 
     const targetProps = props.notificationTarget.asLifecycleHookTarget(this);
