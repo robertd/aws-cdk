@@ -165,7 +165,7 @@ export abstract class QueueBase extends cdk.Construct implements IQueue {
   public asBucketNotificationDestination(bucketArn: string, bucketId: string): s3n.BucketNotificationDestinationProps {
     if (!this.notifyingBuckets.has(bucketId)) {
       this.addToResourcePolicy(new iam.PolicyStatement()
-        .addServicePrincipal('s3.amazonaws.com')
+        .addServicePrincipal(this, 's3')
         .addAction('sqs:SendMessage')
         .addResource(this.queueArn)
         .addCondition('ArnLike', { 'aws:SourceArn': bucketArn }));
@@ -177,7 +177,7 @@ export abstract class QueueBase extends cdk.Construct implements IQueue {
       // https://docs.aws.amazon.com/AmazonS3/latest/dev/ways-to-add-notification-config-to-bucket.html
       if (this.encryptionMasterKey) {
         this.encryptionMasterKey.addToResourcePolicy(new iam.PolicyStatement()
-          .addServicePrincipal('s3.amazonaws.com')
+          .addServicePrincipal(this, 's3')
           .addAction('kms:GenerateDataKey')
           .addAction('kms:Decrypt')
           .addAllResources(), /* allowNoOp */ false);
