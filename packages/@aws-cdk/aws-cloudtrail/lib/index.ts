@@ -130,17 +130,16 @@ export class CloudTrail extends cdk.Construct {
     super(scope, id);
 
     const s3bucket = new s3.Bucket(this, 'S3', {encryption: s3.BucketEncryption.Unencrypted});
-    const cloudTrailPrincipal = "cloudtrail.amazonaws.com";
 
     s3bucket.addToResourcePolicy(new iam.PolicyStatement()
       .addResource(s3bucket.bucketArn)
       .addActions('s3:GetBucketAcl')
-      .addServicePrincipal(cloudTrailPrincipal));
+      .addServicePrincipal(this, 'cloudtrail'));
 
     s3bucket.addToResourcePolicy(new iam.PolicyStatement()
       .addResource(s3bucket.arnForObjects(`AWSLogs/${this.node.stack.accountId}/*`))
       .addActions("s3:PutObject")
-      .addServicePrincipal(cloudTrailPrincipal)
+      .addServicePrincipal(this, 'cloudtrail')
       .setCondition("StringEquals", {'s3:x-amz-acl': "bucket-owner-full-control"}));
 
     if (props.sendToCloudWatchLogs) {
@@ -149,7 +148,7 @@ export class CloudTrail extends cdk.Construct {
       });
       this.cloudWatchLogsGroupArn = logGroup.logGroupArn;
 
-      const logsRole = new iam.Role(this, 'LogsRole', {assumedBy: new iam.ServicePrincipal(cloudTrailPrincipal) });
+      const logsRole = new iam.Role(this, 'LogsRole', {assumedBy: new iam.ServicePrincipal(this, 'cloudtrail') });
 
       const streamArn = `${this.cloudWatchLogsRoleArn}:log-stream:*`;
       logsRole.addToPolicy(new iam.PolicyStatement()
