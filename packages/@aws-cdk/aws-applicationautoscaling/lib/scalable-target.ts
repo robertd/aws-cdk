@@ -90,7 +90,7 @@ export class ScalableTarget extends cdk.Construct {
     }
 
     this.role = props.role || new iam.Role(this, 'Role', {
-      assumedBy: new iam.ServicePrincipal('application-autoscaling.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(this, 'application-autoscaling')
     });
 
     const resource = new CfnScalableTarget(this, 'Resource', {
