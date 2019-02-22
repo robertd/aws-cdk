@@ -72,7 +72,7 @@ export class StateMachine extends cdk.Construct implements IStateMachine, events
         super(scope, id);
 
         this.role = props.role || new iam.Role(this, 'Role', {
-            assumedBy: new iam.ServicePrincipal(`states.${this.node.stack.region}.amazonaws.com`),
+            assumedBy: new iam.ServicePrincipal(this, 'states'),
         });
 
         const graph = new StateGraph(props.definition.startState, `State Machine ${id} definition`);
@@ -105,7 +105,7 @@ export class StateMachine extends cdk.Construct implements IStateMachine, events
     public asEventRuleTarget(_ruleArn: string, _ruleId: string): events.EventRuleTargetProps {
         if (!this.eventsRole) {
             this.eventsRole = new iam.Role(this, 'EventsRole', {
-                assumedBy: new iam.ServicePrincipal('events.amazonaws.com')
+                assumedBy: new iam.ServicePrincipal(this, 'events')
             });
 
             this.eventsRole.addToPolicy(new iam.PolicyStatement()
