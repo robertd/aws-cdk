@@ -487,7 +487,7 @@ export class UserPool extends cdk.Construct implements IUserPool {
   private addLambdaPermission(fn: lambda.IFunction, name: string): void {
     const normalize = name.charAt(0).toUpperCase() + name.slice(1);
     fn.addPermission(`${normalize}Cognito`, {
-      principal: new iam.ServicePrincipal('cognito-idp.amazonaws.com'),
+      principal: new iam.ServicePrincipal(fn, 'cognito-idp'),
       sourceArn: this.userPoolArn
     });
   }
