@@ -9,7 +9,7 @@ export = {
     // GIVEN
     const stack = new cdk.Stack();
     const role = new iam.Role(stack, 'Role', {
-      assumedBy: new iam.ServicePrincipal('logs.us-east-2.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(stack, 'logs')
     });
 
     // WHEN
@@ -33,7 +33,7 @@ export = {
     // GIVEN
     const stack = new cdk.Stack();
     const role = new iam.Role(stack, 'Role', {
-      assumedBy: new iam.ServicePrincipal('logs.us-east-2.amazonaws.com')
+      assumedBy: new iam.ServicePrincipal(stack, 'logs')
     });
 
     const dest = new CrossAccountDestination(stack, 'Dest', {
