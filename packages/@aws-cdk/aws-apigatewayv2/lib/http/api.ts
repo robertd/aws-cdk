@@ -148,6 +148,28 @@ export interface HttpApiProps {
 }
 
 /**
+ * Supported CORS HTTP methods
+ */
+export enum CorsHttpMethod{
+  /** HTTP ANY */
+  ANY = '*',
+  /** HTTP DELETE */
+  DELETE = 'DELETE',
+  /** HTTP GET */
+  GET = 'GET',
+  /** HTTP HEAD */
+  HEAD = 'HEAD',
+  /** HTTP OPTIONS */
+  OPTIONS = 'OPTIONS',
+  /** HTTP PATCH */
+  PATCH = 'PATCH',
+  /** HTTP POST */
+  POST = 'POST',
+  /** HTTP PUT */
+  PUT = 'PUT',
+}
+
+/**
  * Options for the CORS Configuration
  */
 export interface CorsPreflightOptions {
@@ -167,7 +189,7 @@ export interface CorsPreflightOptions {
    * Represents a collection of allowed HTTP methods.
    * @default - No Methods are allowed.
    */
-  readonly allowMethods?: HttpMethod[];
+  readonly allowMethods?: CorsHttpMethod[];
 
   /**
    * Represents a collection of allowed origins.
