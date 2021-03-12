@@ -26,9 +26,6 @@
           "Framework :: AWS CDK",
           "Framework :: AWS CDK :: 1"
         ]
-      },
-      "go": {
-        "moduleName": "github.com/aws/aws-cdk-go"
       }
     },
     "projectReferences": true
@@ -106,6 +103,7 @@
       "import:@aws-cdk/aws-ecr.Repository",
       "construct-base-is-private:@aws-cdk/aws-ecr.RepositoryBase",
       "docs-public-apis:@aws-cdk/aws-ecr.Repository.fromRepositoryArn",
+      "docs-public-apis:@aws-cdk/aws-ecr.Repository.imageTagMutability",
       "docs-public-apis:@aws-cdk/aws-ecr.Repository.fromRepositoryName",
       "props-default-doc:@aws-cdk/aws-ecr.LifecycleRule.maxImageAge",
       "props-default-doc:@aws-cdk/aws-ecr.LifecycleRule.maxImageCount",
